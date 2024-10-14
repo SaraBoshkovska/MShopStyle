@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MShopStyle.Areas.Identity.Data
+
+@inject SignInManager<MShopStyleUser> SignInManager
+@inject UserManager<MShopStyleUser> UserManager
+<style>
+    a{
+        color: silver;
+        text-decoration: none;
+    }
+    .welcome{
+        font-family: "Playfair Display SC", serif;
+        font-size:30px;
+        margin-left:80px;
+       
+    }
+    .btn
+    {
+        
+        margin-left: 250px;
+    }
+</style>
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+        <p class="welcome">♡ Welcome to our shop ♡ </p>
+    <li class="nav-item">
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button id="logout" type="submit" class="nav-link btn btn-link text-light border-0">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+        <div class="mb-2" style="margin-top: -30px;">
+    <li class="nav-item" >
+            <a href="/Identity/Account/Register" style="margin-left: 350px;">Register Here</a>
+    </li>
+    <p></p>
+    <li class="nav-item">
+            <a href="/Identity/Account/Login" style="margin-left: 387px;">Login Here</a>
+    </li>
+        </div>
+}
+</ul>

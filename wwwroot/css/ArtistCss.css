@@ -1,0 +1,29 @@
+﻿.apic
+{
+    width: 400px;
+    height: 300px;
+}
+body
+{
+    background-image: url('/images/backgfix2.jpg');
+}
+.card {
+    background-color: #191919;
+}
+.card-title {
+    color: silver;
+   
+    text-align: center;
+    font-family: "DM Serif Display", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size:25px;
+}
+.card-text {
+    color: silver;
+    text-align: center;
+    font-family: "DM Serif Display", serif;
+ 
+    font-style: normal;
+    font-size: 20px;
+}

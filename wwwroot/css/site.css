@@ -1,0 +1,76 @@
+nav{
+    background-color:transparent;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.style {
+    color: beige;
+    font-family: "Playfair Display SC", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 60px;
+    margin-left:20px;
+}
+.nav-item {
+    color: beige;
+    font-family: "Playfair Display SC", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 22px;
+}
+.nav-link{
+    color:white;
+    margin-right:12px;
+}
+.nav-link:hover {
+    color: darkgrey !important;
+}
+.link-1 {
+    background-image: url('../images/facebook.png');
+    width: 30px;
+    height: 30px;
+}
+.link-2 {
+    background-image: url('../images/instagram.png');
+    margin-top:4px;
+    width: 35px;
+    height:35px;
+}
+.link-3 {
+    background-image: url('../images/twitter.png');
+    margin-top: 5px;
+    width: 32px;
+    height: 32px;
+}
+.link-4 {
+    background-image: url('../images/yt.png');
+    margin-top: 5px;
+    width: 32px;
+    height: 32px;
+}
+.link-5 {
+    background-image: url('../images/spotify.png');
+    margin-top: 5px;
+    width: 32px;
+    height: 32px;
+}
+.link-6 {
+    background-image: url('../images/mail.png');
+    margin-top: 5px;
+    width: 32px;
+    height: 32px;
+}
+.image-link{
+    display: inline-block;
+   
+    background-size:cover;
+}
+.footer .containerr{
+    padding-left: 0;
+    margin-left: 30px;
+    margin-bottom: -40px;
+}

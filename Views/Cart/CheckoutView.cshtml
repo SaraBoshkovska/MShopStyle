@@ -1,0 +1,202 @@
+﻿@model MShopStyle.Models.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+<style>
+    body {
+        background-image: url('/images/backgfix2.jpg');
+    }
+    .tekst1{
+        font-size: 30px;
+        color: lightgoldenrodyellow;
+        text-align:center;
+        font-family: "DM Serif Display", serif;
+        margin-top:20px;
+    }
+
+    .tekst2 {
+        font-size: 21px;
+        color: lightgoldenrodyellow;
+        text-align: center;
+        font-family: "DM Serif Display", serif;
+        margin-top: 20px;
+    }
+    .tekst {
+        font-size: 20px;
+        color: silver;
+
+        font-family: "DM Serif Display", serif;
+     
+    }
+    .container{
+        color:silver;
+    }
+
+    .row {
+        margin-bottom: 20px; 
+    }
+
+    .col-2 img {
+        margin-bottom: 10px; 
+    }
+    .total
+    {
+        padding-left:80px; 
+        font-family: "DM Serif Display", serif;
+    }
+ 
+    .shipping {
+        font-size: 24px;
+        color: silver;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        font-family: "DM Serif Display", serif;
+    }
+
+    .border {
+        border: 2px solid lightgoldenrodyellow; /* Customize border color */
+    }
+
+    .form-control {
+        text-align: center; /* Center text in input fields */
+        margin-bottom: 15px; /* Space between input fields */
+    }
+</style>
+
+<h3 class="tekst1">Checkout 💵</h3>
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert" id="successAlert">
+        @ViewBag.SuccessMessage
+    </div>
+    <script>
+        document.getElementById("successAlert").style.display = "block"; // Show the alert
+    </script>
+}
+
+
+<h3 class="tekst2">❕ The payment is completed upon delivery to your home address, payment is cash only with shipping fees calculated based on destination ❕</h3>
+
+<hr />
+<div class="container">
+    @foreach (var item in Model.Items)
+    {
+        <div class="row align-items-center  border-bottom mb-3">
+            <div class="col-2">
+                <img src="@item.Product.ImageProduct" alt="Image of @item.Product.Name" class="img-fluid" />
+            </div>
+            <div class="col-3" style="padding-left: 80px;">
+                <h5>@item.Product.Name</h5>
+            </div>
+            <div class="col-2">
+                <p>Price: $<span class="price" data-price="@item.Product.Price">@item.Product.Price</span></p>
+            </div>
+
+
+            <div class="col-3">
+                <div class="d-flex align-items-center">
+                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity('@item.Product.Id', -1)">-</button>
+                    <span class="mx-2" id="quantity-@item.Product.Id">@item.Quantity</span>
+                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity('@item.Product.Id', 1)">+</button>
+                </div>
+            </div>
+         
+            <div class="col-2 text-right">
+                <button type="button" class="btn btn-danger" onclick="removeItem('@item.Product.Id')">Remove</button>
+            </div>
+        </div>
+        <script>
+            function changeQuantity(productId, change) {
+                var quantityElement = document.getElementById("quantity-" + productId);
+                var currentQuantity = parseInt(quantityElement.innerText);
+                var priceElement = document.querySelector(`.price[data-price='${@item.Product.Price}']`);
+                var price = parseFloat(priceElement.getAttribute('data-price')); 
+
+
+                var newQuantity = currentQuantity + change;
+
+                if (newQuantity >= 0 && newQuantity <= 4) {
+                    quantityElement.innerText = newQuantity;
+
+                    // Calculate the new total cost based on the new quantity
+                    var totalCostElement = document.getElementById("totalCost");
+
+                    // Calculate the new product total
+                    var newProductTotal = newQuantity * price;
+
+                    // Update the overall total cost display
+                    var currentTotalCost = parseFloat(totalCostElement.innerText.substring(1)); // Extract current total
+                    var oldProductTotal = currentQuantity * price; // Calculate old total for this product
+
+                    // Update the overall total cost
+                    var updatedTotalCost = currentTotalCost - oldProductTotal + newProductTotal;
+
+                    // Display the updated total cost
+                    totalCostElement.innerText = "$" + updatedTotalCost.toFixed(2);
+                }
+            }
+         </script>
+   
+    }
+
+
+    <div class="row justify-content-end mt-3">
+        <div class="col-3 text-right total" >
+            <h4>Total Cost: <span id="totalCost">@Model.Items.Sum(i => i.TotalPrice).ToString("C")</span></h4>
+        </div>
+    </div>
+
+</div>
+
+
+<h2 class="shipping text-center">Shipping Information</h2>
+
+<div class="container">
+    <div class="border rounded p-4" style="max-width: 500px; margin: auto;">
+        <form method="post" action="@Url.Action("SubmitCheckout", "Cart")">
+            <div class="form-group text-center">
+                <input type="text" name="FullName" class="form-control" placeholder="Full Name" required />
+            </div>
+            <div class="form-group text-center">
+                <input type="email" name="Email" class="form-control" placeholder="Email" />
+            </div>
+            <div class="form-group text-center">
+                <input type="text" name="ShippingAddress" class="form-control" placeholder="Shipping Address" required />
+            </div>
+            <div class="form-group text-center">
+                <input type="text" name="PhoneNumber" class="form-control" placeholder="Phone Number" required />
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Complete Checkout</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="text-center mt-3">
+        <a href="@Url.Action("Index", "Product")" class="btn btn-primary">OK</a>
+    </div>
+}
+<script>
+
+    function removeItem(productId) {
+        // Make an AJAX call to remove the item from the cart
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("RemoveFromCart", "Cart")',
+            data: { productId: productId },
+            success: function (response) {
+                // Optionally reload the page or update the UI to reflect the removal
+                location.reload(); // Reload the page to show updated cart
+            },
+            error: function () {
+                alert("Error removing item from cart.");
+            }
+        });
+    }
+</script>
+

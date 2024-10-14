@@ -1,0 +1,266 @@
+﻿@model MShopStyle.Models.Product
+@using Microsoft.AspNetCore.Identity
+@using MShopStyle.Areas.Identity.Data
+@inject SignInManager<MShopStyleUser> SignInManager
+@inject UserManager<MShopStyleUser> UserManager
+@{
+    ViewData["Title"] = "Buy";
+}
+<style>
+    body {
+        background-image: url('/images/backgfix2.jpg');
+    }
+
+    .text {
+        font-size: 20px;
+        color: silver;
+        margin-left: 20px;
+        font-family: "DM Serif Display", serif;
+        margin-bottom:40px;
+    }
+    .back{
+        color:mintcream
+    }
+
+    .slika img {
+        width: 400px;
+        height: 400px;
+       
+        margin-bottom:70px;
+        margin-right: 70px;
+    }
+    .celo
+    {
+        display: flex;
+        align-items: center;
+        margin-top:40px;
+        margin-left:120px;
+    }
+    .btn{
+        color:silver;
+    }
+
+    .reviews {
+        background-color: whitesmoke;
+        padding: 20px;
+        border-radius: 8px;
+        font-family: DM Serif Display, serif;
+    }
+
+    .media {
+        background-color: floralwhite;
+        border: 1px solid #e0e0e0;
+    }
+
+        .media img {
+            width: 64px;
+            height: 64px;
+        }
+
+    .media-body h5 {
+        color: #333;
+    }
+
+    .media-body p {
+        margin-bottom: 5px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    textarea.form-control {
+        resize: none;
+    }
+
+    form {
+        max-width: 600px;
+        margin: 0 auto; 
+
+
+    }
+
+    .form-control-lg {
+        padding: 10px;
+        font-size: 1.2rem;
+    }
+
+    .rating .fa-star {
+        font-size: 2rem; 
+        cursor: pointer;
+        color: lightgray; 
+    }
+
+     
+        .rating .fa-star:hover {
+            color: gold; 
+        }
+
+        .rating .fa-star.checked {
+            color: gold;
+        }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        font-size: 1.2rem;
+        padding: 10px;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa;
+    }
+    .revieww{
+        font-family :DM Serif Display, serif;
+        font-size :30px;
+        color :silver;
+    }
+
+    .ml-auto {
+        margin-left: 1100px; 
+    }
+
+    
+</style>
+
+<div  class="celo">
+    <div class="slika">
+        <img src="@Url.Content(Model.ImageProduct)" class="card-img-top" alt="Image of @Model.Name">
+    </div>
+    
+<div class="text">
+<h2>@Model.Name</h2>
+<p><strong>Price:</strong> $@Model.Price</p>
+<p><strong>Description:</strong> @Model.Description</p>
+    <p><strong>Artist:</strong> @Model.Artist.FullName</p>
+
+        <form id="addToCartForm" method="post">
+            <input type="hidden" name="ProductId" value="@Model.Id" />
+            <input type="hidden" name="ProductName" value="@Model.Name" />
+            <input type="hidden" name="ProductPrice" value="@Model.Price" />
+            <input type="hidden" name="ProductImage" value="@Url.Content(Model.ImageProduct)" />
+            <button type="submit" class="btn btn-outline-dark">Add To Cart</button>
+        </form>
+
+</div>
+</div>
+<div class="reviews mt-5">
+    <h3 class="mb-4">Customer Reviews</h3>
+
+    @if (Model.Reviews != null && Model.Reviews.Any())
+    {
+        @foreach (var review in Model.Reviews)
+        {
+            <div class="media mb-4 p-3 border rounded shadow-sm">
+                <img src="https://via.placeholder.com/64" class="mr-3 rounded-circle" alt="@review.AppUser">
+                <div class="media-body">
+                    <h5 class="mt-0">@review.AppUser</h5>
+                    <div class="text-warning">
+                        @for (var i = 0; i < review.Rating; i++)
+                        {
+                            <span class="fa fa-star"></span>
+                        }
+                    </div>
+                    <p>@review.Comment</p>
+                </div>
+                <div class="ml-auto">
+                    <form method="post" action="@Url.Action("RemoveReview", "Products")">
+                        <input type="hidden" name="ReviewId" value="@review.Id" />
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        }
+                    </form>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">No reviews yet. Be the first to write one!</p>
+    }
+</div>
+
+<h4 class="mt-5 text-center revieww" >Leave a Review:</h4>
+<form method="post" action="@Url.Action("SubmitReview", "Products")" class="mt-3 p-4 border rounded shadow-sm bg-light">
+    <div class="form-group">
+        <label for="AppUser" class="font-weight-bold">Your Name</label>
+        <input type="text" class="form-control form-control-lg" id="AppUser" name="AppUser" placeholder="Enter your name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="Comment" class="font-weight-bold">Your Review</label>
+        <textarea class="form-control form-control-lg" id="Comment" name="Comment" rows="4" maxlength="500" placeholder="Write your review here..." required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="Rating" class="font-weight-bold">Your Rating</label>
+        <div class="rating mb-3">
+            @for (var i = 1; i <= 5; i++)
+            {
+                <span class="fa fa-star" data-value="@i"></span>
+            }
+        </div>
+        <input type="hidden" name="Rating" id="RatingInput" value="0" required />
+    </div>
+
+    <input type="hidden" name="ProductId" value="@Model.Id" />
+
+    <button type="submit" class="btn btn-success btn-lg btn-block">Submit Review</button>
+</form>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+<script>
+    document.getElementById('addToCartForm').onsubmit = async function (event) {
+        event.preventDefault();
+
+        try {
+            const response = await fetch('@Url.Action("AddToCart", "Cart")',
+                {
+                    method: 'POST', //prakjam request do akcijata AddToCart vo Cart kontrolerot
+                    body: new FormData(this) //gi zemam vrednostite vneseni  vo formata
+                });
+            if (response.ok) { //.ok e od strana na response interface deka se dobilo odgovor bez problem, vrakja boolean
+                alert("Item added to cart!");
+            } else {
+                alert("Error adding item to cart.");
+            }
+        }
+        catch {
+            alert("Error adding item to cart.");
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function () {
+        const ratingInput = document.getElementById('RatingInput');
+        const stars = document.querySelectorAll('.fa-star');
+
+        const updateStars = (rating) => { //pravam funkcija sto prima paramtar rating
+            stars.forEach((star, i) => { //imam 5 stars i so ova kreiram funkcija so dva parametri
+                star.classList.toggle('checked', i < rating); //ako i < rating e true dodava checked class na zvezdickata, ako ne e true go trga
+                //classList dodava klasi na HTML element
+            });
+        };
+
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => { //koga ke klikne user 
+                ratingInput.value = index + 1; //vrednosta na ratingInput se menuva
+                updateStars(index + 1); // taa vrednost se isprakja i za azhuriranje
+            });
+        });
+
+        star.addEventListener('mouseover', () => updateStars(index + 1));
+        star.addEventListener('mouseout', () => updateStars(ratingInput.value));
+
+    };
+</script>
+
+
+
+
+
+
+
+

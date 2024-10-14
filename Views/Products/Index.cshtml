@@ -1,0 +1,129 @@
+﻿@model IEnumerable<MShopStyle.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<style>
+    .nav-tabs .nav-link {
+        color: white;
+        background-color: transparent;
+    }
+
+        .nav-tabs .nav-link.active {
+            color: black;
+            background-color: white;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background-color: #f8f9fa;
+        }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        color: silver;
+        text-align: center;
+        font-family: "DM Serif Display", serif;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: silver;
+        text-align: center;
+        font-family: "DM Serif Display", serif;
+    }
+
+    body {
+        background-image: url('/images/backgfix2.jpg');
+    }
+
+    .card {
+        background-color: #191919;
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+</style>
+   @if (User.Identity.IsAuthenticated && User.IsInRole("Admin")){
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+   }
+<body>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link @(string.IsNullOrEmpty(ViewData["SelectedCategory"] as string) || ViewData["SelectedCategory"] as string == "all" ? "active" : "")"
+               href="@(Url.Action("Index", new { category = "all", artistId = ViewData["ArtistId"] }))">All</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewData["SelectedCategory"] as string == "cd" ? "active" : "")"
+               href="@(Url.Action("Index", new { category = "cd", artistId = ViewData["ArtistId"] }))">CDs</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewData["SelectedCategory"] as string == "poster" ? "active" : "")"
+               href="@(Url.Action("Index", new { category = "poster", artistId = ViewData["ArtistId"] }))">Posters</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewData["SelectedCategory"] as string == "tickets" ? "active" : "")"
+               href="@(Url.Action("Index", new { category = "ticket", artistId = ViewData["ArtistId"] }))">Tickets</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewData["SelectedCategory"] as string == "t-shirts" ? "active" : "")"
+               href="@(Url.Action("Index", new { category = "t-shirt", artistId = ViewData["ArtistId"] }))">T-Shirts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewData["SelectedCategory"] as string == "other" ? "active" : "")"
+               href="@(Url.Action("Index", new { category = "funko pop", artistId = ViewData["ArtistId"] }))">Funko Pop</a>
+        </li>
+    </ul>
+
+    <div class="container mt-3">
+        <div class="row row-cols-1 row-cols-md-5 g-4">
+
+            @foreach (var item in Model)
+            {
+
+                <div class="col">
+                    <div class="card h-10">
+                        <a asp-controller="Products" asp-action="BuyingPage" asp-route-id="@item.Id" class="text-reset text-decoration-none">
+                            <img src="@item.ImageProduct" class="card-img-top fixed-size-img" alt="Image of @item.Name">
+                            <div class="card-body">
+                                <h5 class="card-title"><strong>@item.Name</strong></h5>
+                                <p class="card-text">$@item.Price</p>
+                                <p class="card-text">@item.Artist.FullName</p>
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                }
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                }
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            }
+
+
+        </div>
+    </div>
+</body>
+
+
+
+

@@ -1,0 +1,79 @@
+﻿@model MShopStyle.ViewModels.CreateArtistViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+<style>
+    body {
+        background-image: url('/images/backgfix2.jpg');
+        color:silver;
+    }
+</style>
+<h1>Create</h1>
+
+<h4>Artist</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="artist.FirstName" class="control-label"></label>
+                <input asp-for="artist.FirstName" class="form-control" />
+                <span asp-validation-for="artist.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="artist.LastName" class="control-label"></label>
+                <input asp-for="artist.LastName" class="form-control" />
+                <span asp-validation-for="artist.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Genres</label>
+                <select asp-for="SelectedGenres" class="form-control js-example-basic-multiple" asp-items="Model.GenreList" multiple></select>
+                <span asp-validation-for="SelectedGenres" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="artist.Bio" class="control-label"></label>
+                <textarea asp-for="artist.Bio" class="form-control"></textarea>
+                <span asp-validation-for="artist.Bio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="artist.Discography" class="control-label"></label>
+                <textarea asp-for="artist.Discography" class="form-control"></textarea>
+                <span asp-validation-for="artist.Discography" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="artist.Awards" class="control-label"></label>
+                <textarea asp-for="artist.Awards" class="form-control"></textarea>
+                <span asp-validation-for="artist.Awards" class="text-danger"></span>
+            </div>
+            <p></p>
+            <div class="form-group">
+                <label class="control-label">Artist Image</label>
+                <input type="file" name="ArtistImage" />
+                <span asp-validation-for="ArtistImage" class="text-danger"></span>
+            </div>
+            <p></p>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script>
+            $(document).ready(function () {
+                $(".js-example-basic-multiple").select2();
+            });
+        </script>
+    }
+}

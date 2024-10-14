@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Checkout Complete";
+}
+
+<style>
+    body {
+        background-image: url('/images/backgfix2.jpg');
+    }
+
+    .alert {
+        margin-top: 20px;
+        text-align: center;
+    }
+    .k{
+        margin-top:200px;
+    }
+</style>
+
+<div class="k">
+<div class="alert alert-success" role="alert">
+    @TempData["SuccessMessage"]
+</div>
+
+<div class="text-center">
+    <a href="@Url.Action("Index", "Products")" class="btn btn-primary">Return to Products</a>
+</div>
+</div>
